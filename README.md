@@ -105,3 +105,57 @@ SimpleCov.start
 ```
 
 You can see your test coverage when you run your tests. If you want this in a graphical form, uncomment the `HTMLFormatter` line and see what happens!
+
+
+===begin
+
+Include these in a Gemfile:
+```
+gem 'pg'
+gem 'sinatra'
+gem 'capybara'
+gem 'rspec'
+```
+
+
+The testing suite used is RSpec, and Capybara is used for the web features.
+Include the following in spechelper.rb:
+```
+require_relative './setup_test_database'
+
+ENV['ENVIRONMENT'] = 'test'
+ENV['RACK_ENV'] = 'test'
+
+require './app.rb'
+require 'capybara'
+require 'capybara/rspec'
+require 'rspec'
+
+RSpec.configure do |config|
+  config.before(:each) do
+    setup_test_database
+  end
+end
+
+Capybara.app = Chitter
+
+```
+##  Database setup instructions
+We used PostgreSQL to create a database called Chitter.
+
+If PostgreSQL is already setup, skip to step 5:
+1) `brew install PostgreSQL`
+
+2) `ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents`
+
+3) `launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist`
+
+4) Run: `psql PostgreSQL`
+
+5) Then, create the database in psql using:
+`CREATE DATABASE chitter_sql_db;`
+
+6) Connect to the database using:
+`\c chitter_sql_db`
+
+<!-- 7) Run the query in the file, *01_create_chitter???_table.sql* -->
